@@ -1,9 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 
-// 核心品牌色：同步汇率版本的明亮蓝色
+// 核心品牌色：同步汇率版本的科技蓝色
 const BRAND_BLUE = '#0070f3'; 
-const DEEP_NAVY = '#003366'; // 保留原微信复制按钮的深色
+const DEEP_NAVY = '#003366'; // 复制按钮专用深色
 const LIGHT_BG = '#f5f8fa';    
 
 export default function TradeCalculator() {
@@ -21,7 +21,7 @@ export default function TradeCalculator() {
       btnCopy: '复制报价单 (微信)', 
       quoteTitle: '--- 📋 贸易报价单 ---',
       taxLabel: '关税 / 增值税',
-      footerMain: 'Maksym 数字化贸易助手 | 中乌欧跨境业务支撑系统 v2.7',
+      footerMain: 'Maksym Trade Tool | 中乌欧跨境业务支撑系统 v2.7',
       footerSub: '跨境贸易专家 Maksym (Kyiv) 数字化驱动'
     },
     en: {
@@ -32,7 +32,7 @@ export default function TradeCalculator() {
       btnCopy: 'Copy Quote (WeChat)', 
       quoteTitle: '--- 📋 Trade Quote ---',
       taxLabel: 'Duty / VAT',
-      footerMain: 'Maksym Trade Suite | China-Ukraine-Europe Support v2.7',
+      footerMain: 'Maksym Trade Tool | China-Ukraine-Europe Support v2.7',
       footerSub: 'Powered by Digital Trade Expert Maksym (Kyiv)'
     },
     ua: {
@@ -43,7 +43,7 @@ export default function TradeCalculator() {
       btnCopy: 'Копіювати (WeChat)', 
       quoteTitle: '--- 📋 Комерційна пропозиція ---',
       taxLabel: 'Мито / ПДВ',
-      footerMain: 'Maksym Trade Assistant | Система підтримки бізнесу v2.7',
+      footerMain: 'Maksym Trade Tool | Система підтримки бізнесу v2.7',
       footerSub: 'Цифрова платформа експерта Maksym (Kyiv)'
     }
   };
@@ -79,8 +79,9 @@ export default function TradeCalculator() {
   };
 
   return (
-    <div style={{ padding: '10px', fontFamily: '-apple-system, sans-serif', maxWidth: '400px', margin: '0 auto', backgroundColor: '#fff' }}>
+    <div style={{ padding: '12px', fontFamily: '-apple-system, sans-serif', maxWidth: '400px', margin: '0 auto', backgroundColor: '#fff' }}>
       
+      {/* 语言切换栏 */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '5px', marginBottom: '10px' }}>
         {['zh', 'en', 'ua'].map(l => (
           <button key={l} onClick={() => setLang(l)} style={{ flex: 1, padding: '6px', borderRadius: '6px', border: `1px solid ${BRAND_BLUE}`, backgroundColor: lang === l ? BRAND_BLUE : 'white', color: lang === l ? 'white' : BRAND_BLUE, fontWeight: 'bold', fontSize: '12px' }}>{l.toUpperCase()}</button>
@@ -89,6 +90,7 @@ export default function TradeCalculator() {
 
       <h2 style={{ textAlign: 'center', color: BRAND_BLUE, margin: '10px 0 15px 0', fontSize: '1.3em', fontWeight: '800' }}>{t[lang].title}</h2>
       
+      {/* 输入区域 */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <div style={inputRow}><span style={labelStyle}>{t[lang].price}</span><input type="number" name="price" value={inputs.price} onChange={handleInputChange} style={inputStyle} /></div>
         <div style={inputRow}><span style={labelStyle}>{t[lang].qty}</span><input type="number" name="qty" value={inputs.qty} onChange={handleInputChange} style={inputStyle} /></div>
@@ -99,6 +101,7 @@ export default function TradeCalculator() {
         </div>
       </div>
 
+      {/* 结果显示 */}
       <div style={{ marginTop: '15px', padding: '12px', backgroundColor: LIGHT_BG, borderRadius: '10px', borderLeft: `5px solid ${BRAND_BLUE}` }}>
         <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>{t[lang].prodTotal}: ${productTotal.toLocaleString()}</p>
         <div style={{ marginTop: '5px', paddingTop: '5px', borderTop: '1px dashed #ccc' }}>
@@ -107,6 +110,7 @@ export default function TradeCalculator() {
         </div>
       </div>
 
+      {/* 主操作按钮 */}
       <button onClick={handleCopy} style={mainBtnStyle}>📋 {t[lang].btnCopy}</button>
 
       <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
@@ -114,9 +118,10 @@ export default function TradeCalculator() {
         <button onClick={() => handleShare('telegram')} style={shareBtnStyle('#0088cc')}>Telegram</button>
       </div>
       
+      {/* 统一品牌脚注 (已按要求更新) */}
       <div style={{ marginTop: '20px', padding: '15px 0', borderTop: '1px solid #eee', textAlign: 'center' }}>
-        <p style={{ fontSize: '10px', color: '#888', margin: '0', fontWeight: '500' }}>{t[lang].footerMain}</p>
-        <p style={{ fontSize: '9px', color: '#aaa', margin: '3px 0 0 0' }}>{t[lang].footerSub}</p>
+        <p style={{ fontSize: '10px', color: '#666', margin: '0', fontWeight: '700' }}>{t[lang].footerMain}</p>
+        <p style={{ fontSize: '9px', color: '#888', margin: '4px 0 0 0', fontWeight: '500' }}>{t[lang].footerSub}</p>
       </div>
     </div>
   );
