@@ -1,8 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 
-const THEME_COLOR = '#0070f3'; // 回归经典蓝色
-const BG_COLOR = '#f0f7ff';    
+// 统一品牌标识
+const BRAND_BLUE = '#0070f3'; 
+const LIGHT_BG = '#f0f7ff';    
 
 export default function TradeCalculator() {
   const [lang, setLang] = useState('zh'); 
@@ -18,25 +19,31 @@ export default function TradeCalculator() {
       prodTotal: '商品货值', grandTotal: 'DDP 到岸总成本',
       btnCopy: '复制报价单 (微信)', 
       quoteTitle: '--- 📋 贸易报价单 ---',
-      dutyVatLabel: '关税 / 增值税',
+      taxLabel: '关税 / 增值税',
+      footerLine1: 'Maksym Trade Tool | 中乌欧跨境业务支撑系统 v2.6.0',
+      footerLine2: '跨境贸易专家 Maksym (Kyiv) 数字化驱动',
     },
     en: {
       title: 'Trade Cost Calculator',
-      price: 'Unit Price (USD)', qty: 'Quantity', shipping: 'Total Shipping (USD)',
+      price: 'Price (USD)', qty: 'Qty', shipping: 'Shipping (USD)',
       duty: 'Duty (%)', vat: 'VAT (%)',
       prodTotal: 'Product Value', grandTotal: 'Landed Cost (DDP)',
       btnCopy: 'Copy Quote (WeChat)', 
-      quoteTitle: '--- 📋 Trade Quotation ---',
-      dutyVatLabel: 'Duty / VAT',
+      quoteTitle: '--- 📋 Trade Quote ---',
+      taxLabel: 'Duty / VAT',
+      footerLine1: 'Maksym Trade Tool | Business Support System v2.6.0',
+      footerLine2: 'Trade Expert Maksym (Kyiv) Digitally Driven',
     },
     ua: {
       title: 'Калькулятор вартості',
-      price: 'Ціна за одиницю (USD)', qty: 'Кількість', shipping: 'Вартість доставки (USD)',
+      price: 'Ціна (USD)', qty: 'К-сть', shipping: 'Доставка (USD)',
       duty: 'Мито (%)', vat: 'ПДВ (%)',
-      prodTotal: 'Вартість товару', grandTotal: 'Повна вартість (DDP)',
+      prodTotal: 'Вартість товару', grandTotal: 'Вартість DDP',
       btnCopy: 'Копіювати (WeChat)', 
       quoteTitle: '--- 📋 Комерційна пропозиція ---',
-      dutyVatLabel: 'Мито / ПДВ',
+      taxLabel: 'Мито / ПДВ',
+      footerLine1: 'Maksym Trade Tool | Система підтримки бізнесу v2.6.0',
+      footerLine2: 'Експерт з торгівлі Максим (Київ) Цифровий привід',
     }
   };
 
@@ -53,7 +60,7 @@ export default function TradeCalculator() {
 
   const getQuoteText = () => {
     const current = t[lang];
-    return `${current.quoteTitle}\n\n${current.prodTotal}: $${productTotal.toLocaleString()}\n${current.shipping}: $${shippingTotal.toLocaleString()}\n-----------------\n${current.dutyVatLabel}: $${dutyAmt.toFixed(2)} / $${vatAmt.toFixed(2)}\n\n✅ ${current.grandTotal}: $${grandTotal.toLocaleString()}`;
+    return `${current.quoteTitle}\n\n${current.prodTotal}: $${productTotal.toLocaleString()}\n${current.shipping}: $${shippingTotal.toLocaleString()}\n-----------------\n${current.taxLabel}: $${dutyAmt.toFixed(2)} / $${vatAmt.toFixed(2)}\n\n✅ ${current.grandTotal}: $${grandTotal.toLocaleString()}`;
   };
 
   const handleCopy = async () => {
@@ -71,33 +78,32 @@ export default function TradeCalculator() {
   };
 
   return (
-    <div style={{ padding: '15px', fontFamily: 'sans-serif', maxWidth: '420px', margin: '5px auto', backgroundColor: '#fff', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.08)', borderTop: `5px solid ${THEME_COLOR}` }}>
-      {/* 语言切换 - 更紧凑 */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '15px' }}>
+    <div style={{ padding: '10px 15px', fontFamily: '-apple-system, sans-serif', maxWidth: '420px', margin: '0 auto', backgroundColor: '#fff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* 语言切换 */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '5px', marginBottom: '12px' }}>
         {['zh', 'en', 'ua'].map(l => (
-          <button key={l} onClick={() => setLang(l)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: `1px solid ${THEME_COLOR}`, backgroundColor: lang === l ? THEME_COLOR : 'white', color: lang === l ? 'white' : THEME_COLOR, fontWeight: 'bold', fontSize: '13px' }}>{l.toUpperCase()}</button>
+          <button key={l} onClick={() => setLang(l)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: `1px solid ${BRAND_BLUE}`, backgroundColor: lang === l ? BRAND_BLUE : 'white', color: lang === l ? 'white' : BRAND_BLUE, fontWeight: 'bold', fontSize: '13px' }}>{l.toUpperCase()}</button>
         ))}
       </div>
 
-      <h2 style={{ textAlign: 'center', color: THEME_COLOR, margin: '0 0 15px 0', fontSize: '1.3em' }}>{t[lang].title}</h2>
+      <h2 style={{ textAlign: 'center', color: BRAND_BLUE, margin: '0 0 15px 0', fontSize: '1.35em', fontWeight: '800' }}>{t[lang].title}</h2>
       
-      {/* 输入区域 - 间距收紧 */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <div style={rowStyle}><span style={labelStyle}>{t[lang].price}</span><input type="number" name="price" value={inputs.price} onChange={handleInputChange} style={inputStyle} /></div>
-        <div style={rowStyle}><span style={labelStyle}>{t[lang].qty}</span><input type="number" name="qty" value={inputs.qty} onChange={handleInputChange} style={inputStyle} /></div>
-        <div style={rowStyle}><span style={labelStyle}>{t[lang].shipping}</span><input type="number" name="shipping" value={inputs.shipping} onChange={handleInputChange} style={inputStyle} /></div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={inputRow}><span style={labelStyle}>{t[lang].price}</span><input type="number" name="price" value={inputs.price} onChange={handleInputChange} style={inputStyle} /></div>
+        <div style={inputRow}><span style={labelStyle}>{t[lang].qty}</span><input type="number" name="qty" value={inputs.qty} onChange={handleInputChange} style={inputStyle} /></div>
+        <div style={inputRow}><span style={labelStyle}>{t[lang].shipping}</span><input type="number" name="shipping" value={inputs.shipping} onChange={handleInputChange} style={inputStyle} /></div>
         <div style={{display:'flex', gap:'10px'}}>
           <div style={{flex:1}}><span style={labelStyle}>{t[lang].duty}</span><input type="number" name="dutyRate" value={inputs.dutyRate} onChange={handleInputChange} style={inputStyle} /></div>
           <div style={{flex:1}}><span style={labelStyle}>{t[lang].vat}</span><input type="number" name="vatRate" value={inputs.vatRate} onChange={handleInputChange} style={inputStyle} /></div>
         </div>
       </div>
 
-      {/* 结果区域 - 视觉优化 */}
-      <div style={{ marginTop: '15px', padding: '12px', backgroundColor: BG_COLOR, borderRadius: '12px' }}>
-        <p style={{ margin: '0', fontSize: '13px', color: '#666' }}>{t[lang].prodTotal}: ${productTotal.toLocaleString()}</p>
-        <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px dashed #ccc' }}>
-          <p style={{ margin: '0', fontSize: '14px', color: THEME_COLOR, fontWeight: 'bold' }}>{t[lang].grandTotal}:</p>
-          <p style={{ margin: '2px 0 0 0', fontSize: '2.2em', color: THEME_COLOR, fontWeight: '800' }}>${grandTotal.toLocaleString()}</p>
+      <div style={{ marginTop: '15px', padding: '12px', backgroundColor: LIGHT_BG, borderRadius: '12px', borderLeft: `5px solid ${BRAND_BLUE}` }}>
+        <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>{t[lang].prodTotal}: ${productTotal.toLocaleString()}</p>
+        <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px dashed #ccc' }}>
+          <p style={{ margin: '0', fontSize: '14px', color: BRAND_BLUE, fontWeight: 'bold' }}>{t[lang].grandTotal}:</p>
+          <p style={{ margin: '0', fontSize: '2.3em', color: BRAND_BLUE, fontWeight: '900', letterSpacing: '-1px' }}>${grandTotal.toLocaleString()}</p>
         </div>
       </div>
 
@@ -108,13 +114,17 @@ export default function TradeCalculator() {
         <button onClick={() => handleShare('telegram')} style={shareBtnStyle('#0088cc')}>Telegram</button>
       </div>
       
-      <p style={{ textAlign: 'center', fontSize: '9px', color: '#ccc', marginTop: '15px' }}>Maksym Trade Tool (Kyiv)</p>
+      {/* 品牌标准脚注 */}
+      <div style={{ marginTop: 'auto', paddingTop: '20px', textAlign: 'center', paddingBottom: '10px' }}>
+        <p style={{ fontSize: '11px', color: '#333', margin: '0', fontWeight: 'bold' }}>{t[lang].footerLine1}</p>
+        <p style={{ fontSize: '10px', color: '#888', margin: '4px 0 0 0' }}>{t[lang].footerLine2}</p>
+      </div>
     </div>
   );
 }
 
-const rowStyle = { display: 'flex', flexDirection: 'column', gap: '2px' };
-const labelStyle = { fontSize: '12px', color: '#666', fontWeight: '500' };
-const inputStyle = { width: '100%', padding: '10px', boxSizing: 'border-box', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px' };
-const mainBtnStyle = { width: '100%', padding: '14px', marginTop: '15px', backgroundColor: THEME_COLOR, color: 'white', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer' };
-const shareBtnStyle = (bg) => ({ flex: 1, padding: '10px', backgroundColor: bg, color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' });
+const inputRow = { display: 'flex', flexDirection: 'column', gap: '2px' };
+const labelStyle = { fontSize: '11px', color: '#555', fontWeight: '600' };
+const inputStyle = { width: '100%', padding: '10px', boxSizing: 'border-box', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', outline: 'none' };
+const mainBtnStyle = { width: '100%', padding: '15px', marginTop: '15px', backgroundColor: BRAND_BLUE, color: 'white', border: 'none', borderRadius: '10px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,112,243,0.2)' };
+const shareBtnStyle = (bg) => ({ flex: 1, padding: '12px', backgroundColor: bg, color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' });
