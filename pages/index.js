@@ -1,56 +1,89 @@
+'use client';
 import React, { useState } from 'react';
 
 export default function TradeCalculator() {
-  // 1. 这里是我们的“账本”数据
+  const [lang, setLang] = useState('zh'); 
   const [inputs, setInputs] = useState({
-    price: '',
-    qty: '',
-    shipping: '',
-    dutyRate: 10, // 默认关税 10%
-    vatRate: 20,  // 默认增值税 20%
+    price: '', qty: '', shipping: '', dutyRate: 10, vatRate: 20,
   });
 
-  // 2. 这里是“大脑”：计算逻辑
+  const t = {
+    zh: {
+      title: '中乌贸易成本计算器',
+      price: '单价 (USD)', qty: '数量', shipping: '总运费 (USD)',
+      duty: '关税率 (%)', vat: '增值税率 (%)',
+      prodTotal: '商品总值', grandTotal: '到岸总成本',
+      btn: '生成报价单', quoteTitle: '--- 贸易报价单 ---',
+      totalCost: '总计成本',
+    },
+    en: {
+      title: 'Trade Cost Calculator',
+      price: 'Unit Price (USD)', qty: 'Quantity', shipping: 'Total Shipping (USD)',
+      duty: 'Duty Rate (%)', vat: 'VAT Rate (%)',
+      prodTotal: 'Product Total', grandTotal: 'Total Landed Cost',
+      btn: 'Generate Quote', quoteTitle: '--- Trade Quotation ---',
+      totalCost: 'Total Cost',
+    },
+    ua: {
+      title: 'Калькулятор вартості торгівлі',
+      price: 'Ціна за одиницю (USD)', qty: 'Кількість', shipping: 'Вартість доставки (USD)',
+      duty: 'Ставка мита (%)', vat: 'Ставка ПДВ (%)',
+      prodTotal: 'Вартість товару', grandTotal: 'Загальна вартість (DDP)',
+      btn: 'Сформувати пропозицію', quoteTitle: '--- Комерційна пропозиція ---',
+      totalCost: 'Загальна вартість',
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
 
-  const productTotal = (inputs.price * inputs.qty) || 0;
+  const productTotal = (Number(inputs.price) * Number(inputs.qty)) || 0;
   const shippingTotal = parseFloat(inputs.shipping) || 0;
-  const dutyAmount = (productTotal + shippingTotal) * (inputs.dutyRate / 100);
-  const vatAmount = (productTotal + shippingTotal + dutyAmount) * (inputs.vatRate / 100);
+  const dutyAmount = (productTotal + shippingTotal) * (Number(inputs.dutyRate) / 100);
+  const vatAmount = (productTotal + shippingTotal + dutyAmount) * (Number(inputs.vatRate) / 100);
   const grandTotal = productTotal + shippingTotal + dutyAmount + vatAmount;
 
-  // 3. 这里是“功能”：生成报价单
   const copyQuote = () => {
-    const quote = `--- 贸易报价单 ---\n商品货值: $${productTotal.toFixed(2)}\n运费: $${shippingTotal.toFixed(2)}\n关税: $${dutyAmount.toFixed(2)}\n增值税: $${vatAmount.toFixed(2)}\n-----------------\n到岸总成本: $${grandTotal.toFixed(2)}`;
-    alert(quote); // 在手机上会弹出一个整齐的报价框
+    const current = t[lang];
+    const quote = `${current.quoteTitle}\n${current.prodTotal}: $${productTotal.toFixed(2)}\n${current.duty}: $${dutyAmount.toFixed(2)}\n${current.vat}: $${vatAmount.toFixed(2)}\n-----------------\n${current.grandTotal}: $${grandTotal.toFixed(2)}`;
+    alert(quote);
   };
 
-  // 4. 这里是“脸面”：手机端界面
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '400px', margin: 'auto', backgroundColor: '#f9f9f9', borderRadius: '15px' }}>
-      <h2 style={{ textAlign: 'center', color: '#333' }}>中乌贸易成本计算</h2>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '450px', margin: '20px auto', backgroundColor: '#ffffff', borderRadius: '15px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
+        <button onClick={() => setLang('zh')} style={langBtnStyle(lang === 'zh')}>中</button>
+        <button onClick={() => setLang('en')} style={langBtnStyle(lang === 'en')}>EN</button>
+        <button onClick={() => setLang('ua')} style={langBtnStyle(lang === 'ua')}>UA</button>
+      </div>
+
+      <h2 style={{ textAlign: 'center', color: '#1a1a1a', marginBottom: '20px', fontSize: '1.2em' }}>{t[lang].title}</h2>
       
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <label>单价 (USD): <input type="number" name="price" value={inputs.price} onChange={handleInputChange} style={inputStyle} /></label>
-        <label>数量: <input type="number" name="qty" value={inputs.qty} onChange={handleInputChange} style={inputStyle} /></label>
-        <label>运费 (USD): <input type="number" name="shipping" value={inputs.shipping} onChange={handleInputChange} style={inputStyle} /></label>
-        <label>关税率 (%): <input type="number" name="dutyRate" value={inputs.dutyRate} onChange={handleInputChange} style={inputStyle} /></label>
-        <label>增值税率 (%): <input type="number" name="vatRate" value={inputs.vatRate} onChange={handleInputChange} style={inputStyle} /></label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].price}</span><input type="number" name="price" value={inputs.price} onChange={handleInputChange} style={inputStyle} /></div>
+        <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].qty}</span><input type="number" name="qty" value={inputs.qty} onChange={handleInputChange} style={inputStyle} /></div>
+        <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].shipping}</span><input type="number" name="shipping" value={inputs.shipping} onChange={handleInputChange} style={inputStyle} /></div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].duty}</span><input type="number" name="dutyRate" value={inputs.dutyRate} onChange={handleInputChange} style={inputStyle} /></div>
+          <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].vat}</span><input type="number" name="vatRate" value={inputs.vatRate} onChange={handleInputChange} style={inputStyle} /></div>
+        </div>
       </div>
 
-      <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-        <p><strong>商品总值:</strong> ${productTotal.toFixed(2)}</p>
-        <p><strong>到岸总成本:</strong> <span style={{ color: '#d32f2f', fontSize: '1.2em' }}>${grandTotal.toFixed(2)}</span></p>
+      <div style={{ marginTop: '25px', padding: '15px', backgroundColor: '#f0f7ff', borderRadius: '10px', borderLeft: '5px solid #0070f3' }}>
+        <p style={{ margin: '5px 0' }}>{t[lang].prodTotal}: <strong>${productTotal.toLocaleString()}</strong></p>
+        <p style={{ margin: '5px 0', fontSize: '1.2em', color: '#d32f2f' }}>{t[lang].totalCost}: <strong>${grandTotal.toLocaleString()}</strong></p>
       </div>
 
-      <button onClick={copyQuote} style={buttonStyle}>生成简易报价单</button>
+      <button onClick={copyQuote} style={buttonStyle}>{t[lang].btn}</button>
+      <p style={{ textAlign: 'center', fontSize: '10px', color: '#999', marginTop: '15px' }}>Developed for Maksym Business (Kyiv)</p>
     </div>
   );
 }
 
-// 简单的样式
-const inputStyle = { width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: '1px solid #ccc' };
-const buttonStyle = { width: '100%', padding: '15px', marginTop: '20px', backgroundColor: '#0070f3', color: '#white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' };
+const langBtnStyle = (active) => ({ padding: '5px 12px', borderRadius: '20px', border: '1px solid #0070f3', backgroundColor: active ? '#0070f3' : 'white', color: active ? 'white' : '#0070f3', cursor: 'pointer', fontWeight: 'bold' });
+const inputGroupStyle = { display: 'flex', flexDirection: 'column', gap: '3px', flex: 1 };
+const labelStyle = { fontSize: '12px', color: '#666' };
+const inputStyle = { width: '100%', padding: '10px', boxSizing: 'border-box', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px' };
+const buttonStyle = { width: '100%', padding: '15px', marginTop: '20px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' };
