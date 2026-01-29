@@ -1,92 +1,15 @@
-'use client';
-import React, { useState } from 'react';
-
-export default function TradeCalculator() {
-  const [lang, setLang] = useState('zh'); // 默认中文
-  const [inputs, setInputs] = useState({
-    price: '', qty: '', shipping: '', dutyRate: 10, vatRate: 20,
-  });
-
-  // 翻译词典
-  const t = {
-    zh: {
-      title: '中乌贸易成本计算器',
-      price: '单价 (USD)', qty: '数量', shipping: '总运费 (USD)',
-      duty: '关税率 (%)', vat: '增值税率 (%)',
-      prodTotal: '商品总值', grandTotal: '到岸总成本',
-      btn: '生成报价单', quoteTitle: '--- 贸易报价单 ---',
-      totalCost: '总计成本',
-    },
-    en: {
-      title: 'Trade Cost Calculator',
-      price: 'Unit Price (USD)', qty: 'Quantity', shipping: 'Total Shipping (USD)',
-      duty: 'Duty Rate (%)', vat: 'VAT Rate (%)',
-      prodTotal: 'Product Total', grandTotal: 'Total Landed Cost',
-      btn: 'Generate Quote', quoteTitle: '--- Trade Quotation ---',
-      totalCost: 'Total Cost',
-    },
-    ua: {
-      title: 'Калькулятор вартості торгівлі',
-      price: 'Ціна за одиницю (USD)', qty: 'Кількість', shipping: 'Вартість доставки (USD)',
-      duty: 'Ставка мита (%)', vat: 'Ставка ПДВ (%)',
-      prodTotal: 'Вартість товару', grandTotal: 'Загальна вартість (DDP)',
-      btn: 'Сформувати пропозицію', quoteTitle: '--- Комерційна пропозиція ---',
-      totalCost: 'Загальна вартість',
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputs({ ...inputs, [name]: value });
-  };
-
-  const productTotal = (Number(inputs.price) * Number(inputs.qty)) || 0;
-  const shippingTotal = parseFloat(inputs.shipping) || 0;
-  const dutyAmount = (productTotal + shippingTotal) * (Number(inputs.dutyRate) / 100);
-  const vatAmount = (productTotal + shippingTotal + dutyAmount) * (Number(inputs.vatRate) / 100);
-  const grandTotal = productTotal + shippingTotal + dutyAmount + vatAmount;
-
-  const copyQuote = () => {
-    const current = t[lang];
-    const quote = `${current.quoteTitle}\n${current.prodTotal}: $${productTotal.toFixed(2)}\n${current.duty}: $${dutyAmount.toFixed(2)}\n${current.vat}: $${vatAmount.toFixed(2)}\n-----------------\n${current.grandTotal}: $${grandTotal.toFixed(2)}`;
-    alert(quote);
-  };
-
-  return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '450px', margin: '20px auto', backgroundColor: '#ffffff', borderRadius: '15px', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}>
-      {/* 语言切换按钮 */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
-        <button onClick={() => setLang('zh')} style={langBtnStyle(lang === 'zh')}>中</button>
-        <button onClick={() => setLang('en')} style={langBtnStyle(lang === 'en')}>EN</button>
-        <button onClick={() => setLang('ua')} style={langBtnStyle(lang === 'ua')}>UA</button>
-      </div>
-
-      <h2 style={{ textAlign: 'center', color: '#1a1a1a', marginBottom: '20px', fontSize: '1.2em' }}>{t[lang].title}</h2>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].price}</span><input type="number" name="price" value={inputs.price} onChange={handleInputChange} style={inputStyle} /></div>
-        <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].qty}</span><input type="number" name="qty" value={inputs.qty} onChange={handleInputChange} style={inputStyle} /></div>
-        <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].shipping}</span><input type="number" name="shipping" value={inputs.shipping} onChange={handleInputChange} style={inputStyle} /></div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].duty}</span><input type="number" name="dutyRate" value={inputs.dutyRate} onChange={handleInputChange} style={inputStyle} /></div>
-          <div style={inputGroupStyle}><span style={labelStyle}>{t[lang].vat}</span><input type="number" name="vatRate" value={inputs.vatRate} onChange={handleInputChange} style={inputStyle} /></div>
-        </div>
-      </div>
-
-      <div style={{ marginTop: '25px', padding: '15px', backgroundColor: '#f0f7ff', borderRadius: '10px', borderLeft: '5px solid #0070f3' }}>
-        <p style={{ margin: '5px 0' }}>{t[lang].prodTotal}: <strong>${productTotal.toLocaleString()}</strong></p>
-        <p style={{ margin: '5px 0', fontSize: '1.2em', color: '#d32f2f' }}>{t[lang].totalCost}: <strong>${grandTotal.toLocaleString()}</strong></p>
-      </div>
-
-      <button onClick={copyQuote} style={buttonStyle}>{t[lang].btn}</button>
-      <p style={{ textAlign: 'center', fontSize: '10px', color: '#999', marginTop: '15px' }}>Developed for Maksym Business (Kyiv)</p>
-    </div>
-  );
+{
+  "name": "trade-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
 }
-
-// 样式定义
-const langBtnStyle = (active) => ({ padding: '5px 12px', borderRadius: '20px', border: '1px solid #0070f3', backgroundColor: active ? '#0070f3' : 'white', color: active ? 'white' : '#0070f3', cursor: 'pointer', fontWeight: 'bold' });
-const inputGroupStyle = { display: 'flex', flexDirection: 'column', gap: '3px', flex: 1 };
-const labelStyle = { fontSize: '12px', color: '#666' };
-const inputStyle = { width: '100%', padding: '10px', boxSizing: 'border-box', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px' };
-const buttonStyle = { width: '100%', padding: '15px', marginTop: '20px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' };
